@@ -34,7 +34,7 @@ import lombok.ToString;
 public class Employee implements Serializable{
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long idEmployee;
+	private Long id;
 	private String name;
 	
 	@LazyCollection(LazyCollectionOption.FALSE)

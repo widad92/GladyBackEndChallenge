@@ -2,6 +2,7 @@ package com.weDooChallenge.weDooChallengeBackEnd.Services;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -15,7 +16,7 @@ import com.weDooChallenge.weDooChallengeBackEnd.Repositories.EmployeeRepository;
 import com.weDooChallenge.weDooChallengeBackEnd.Repositories.VoucherRepository;
 import com.weDooChallenge.weDooChallengeBackEnd.models.Card;
 import com.weDooChallenge.weDooChallengeBackEnd.models.Company;
-
+ 
 import com.weDooChallenge.weDooChallengeBackEnd.models.Employee;
 import com.weDooChallenge.weDooChallengeBackEnd.models.Voucher;
 
@@ -35,17 +36,25 @@ import com.weDooChallenge.weDooChallengeBackEnd.models.Voucher;
 
 	
 	@Transactional
-	public Voucher offerAvoucher(Company company ,Employee employee,DepositType depoType,double amount,LocalDate startDate)
+	public Voucher offerAvoucher(Company company ,Employee employee,DepositType depoType,double amount,LocalDate startDate) throws Exception
 	{
+		Voucher voucher ;
+		Company companyExist=companyRepo.findById(company.getId()).orElse(null);
+		Employee employeeExist=employeeRepo.findById(employee.getId()).orElse(null);
 		
-		if(company!=null) {
+		//Optional<Company> companyExist=companyRepo.findById(company.getId());
+		//Optional<Employee> employeeExist=employeeRepo.findById(employee.getId());
+		
+		if(companyExist ==null || employeeExist==null )
+		{
+			throw new Exception();
+		}
+		
 		double currentBlance=company.getBalance();
-		
 		
 		if(currentBlance >= amount) {
 	
-		
-		Voucher voucher =voucherRepo.save(new Voucher(null, employee, company, amount, startDate, depoType));
+		 voucher =voucherRepo.save(new Voucher(null, employeeExist, companyExist, amount, startDate, depoType));
 		
 		company.setBalance(currentBlance-amount);
 		
@@ -59,6 +68,7 @@ import com.weDooChallenge.weDooChallengeBackEnd.models.Voucher;
 		if(employee.getVouchers()!=null) {
 		employee.getVouchers().add(voucher);
 		}
+		
 		Card card =cardRepo.findByDepositTypeAndEmployee(depoType, employee);
 		double cardAmount=card.getAmount();
 		card.setAmount(cardAmount+amount);
@@ -66,7 +76,9 @@ import com.weDooChallenge.weDooChallengeBackEnd.models.Voucher;
 		
 		return voucher;
 		
-		}}
+		}else {
+			System.out.println("balance does not allow it ");
+		}
 		
 		return null;
 		

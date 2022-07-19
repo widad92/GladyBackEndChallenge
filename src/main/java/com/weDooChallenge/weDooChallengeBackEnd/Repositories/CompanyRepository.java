@@ -7,4 +7,5 @@ import com.weDooChallenge.weDooChallengeBackEnd.models.Company;
 
 public interface CompanyRepository extends JpaRepository<Company, Long> {
 
+
 }

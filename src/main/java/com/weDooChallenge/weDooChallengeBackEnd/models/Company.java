@@ -31,7 +31,7 @@ import lombok.ToString;
 public class Company implements Serializable {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long idCompany;
+	private Long id;
 	private int siret;
 	private String name;
 	private double balance;
