@@ -34,20 +34,18 @@ import lombok.ToString;
 @Table(name = "vouchers")
 public class Voucher implements Serializable {
 	
-	//@EmbeddedId
-	//private CompanyDepositKey  id;
+
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
 	@ToString.Exclude
 	@ManyToOne
-    //@MapsId("employeeId")
+   
     @JoinColumn(name = "employee_id")
     Employee employee;
 
 	@ToString.Exclude
     @ManyToOne
-    //@MapsId("companyId")
     @JoinColumn(name = "company_id")
     Company company;
 
@@ -57,21 +55,23 @@ public class Voucher implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private DepositType depositType;
 	
-	public Voucher(Long id, Employee employee, Company company, double amount, LocalDate dateDebut
+public Voucher(Long id, Employee employee, Company company, double amount, LocalDate dateDebut
 			, DepositType depositType) {
 		
-		//this.id = id;
-		this.employee = employee;
-		this.company = company;
-		this.amount = amount;
-		this.dateDebut = dateDebut;
-		this.depositType = depositType;
+	this.employee = employee;
+	this.company = company;
+	this.amount = amount;
+	this.dateDebut = dateDebut;
+	this.depositType = depositType;
 		
-		if(depositType.equals(depositType.GIFT)){
-			this.dateFin =	dateDebut.plusYears(1);
-		}else {
-			int nextYear=dateDebut.getYear()+1;
-			this.dateFin =LocalDate.of(nextYear, 2, 28);
+	if(depositType.equals(depositType.GIFT)){
+		
+	    this.dateFin =	dateDebut.plusYears(1);
+		
+	}else {
+			
+		int nextYear=dateDebut.getYear()+1;
+		this.dateFin =LocalDate.of(nextYear, 2, 28);
 		}
 	
 	}

@@ -2,7 +2,7 @@ package com.weDooChallenge.weDooChallengeBackEnd.Services;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+
 
 import javax.transaction.Transactional;
 
@@ -39,15 +39,14 @@ import com.weDooChallenge.weDooChallengeBackEnd.models.Voucher;
 	public Voucher offerAvoucher(Company company ,Employee employee,DepositType depoType,double amount,LocalDate startDate) throws Exception
 	{
 		Voucher voucher ;
+		double cardAmount;
 		Company companyExist=companyRepo.findById(company.getId()).orElse(null);
 		Employee employeeExist=employeeRepo.findById(employee.getId()).orElse(null);
 		
-		//Optional<Company> companyExist=companyRepo.findById(company.getId());
-		//Optional<Employee> employeeExist=employeeRepo.findById(employee.getId());
 		
 		if(companyExist ==null || employeeExist==null )
 		{
-			throw new Exception();
+			throw new Exception("company or employee not exist!");
 		}
 		
 		double currentBlance=company.getBalance();
@@ -56,9 +55,10 @@ import com.weDooChallenge.weDooChallengeBackEnd.models.Voucher;
 	
 		 voucher =voucherRepo.save(new Voucher(null, employeeExist, companyExist, amount, startDate, depoType));
 		
-		company.setBalance(currentBlance-amount);
+		 company.setBalance(currentBlance-amount);
 		
 		if(company.getVouchers()!=null) {
+			
 		company.getVouchers().add(voucher);
 	
 		}
@@ -70,7 +70,7 @@ import com.weDooChallenge.weDooChallengeBackEnd.models.Voucher;
 		}
 		
 		Card card =cardRepo.findByDepositTypeAndEmployee(depoType, employee);
-		double cardAmount=card.getAmount();
+		cardAmount=card.getAmount();
 		card.setAmount(cardAmount+amount);
 		cardRepo.save(card);
 		
@@ -90,6 +90,7 @@ import com.weDooChallenge.weDooChallengeBackEnd.models.Voucher;
 		LocalDate todayDate =LocalDate.now(); 
 		
 		if(vouchers !=null) {
+			
 		 vouchers.stream().forEach(v->{
 			 if(v.getDateFin().isAfter(todayDate)|| v.getDateFin().isEqual(todayDate))
 			 {
