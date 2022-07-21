@@ -43,7 +43,7 @@ class testVoucherService {
 	CardRepository cardRepo;
 	 
 	@InjectMocks
-	VoucherService voucherService;
+	VoucherServiceImpl voucherService;
 
 	
 	@BeforeEach
@@ -56,7 +56,7 @@ class testVoucherService {
 	void testOfferAvoucher_GIFT() throws Exception {
        
 		LocalDate endDateGift=LocalDate.now().plusYears(1);
-	    int nextYear=LocalDate.now().getYear()+1;
+	 
 		
 		
 		//Create companyGift
